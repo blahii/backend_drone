@@ -11,17 +11,17 @@ if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 async function register(req, res) {
-  const { email, password } = req.body;
+  const { email, password, role, ...additionalFields } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
+  if (!email || !password || !role) {
+    return res.status(400).json({ message: 'Email, password, and role are required' });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const { data, error } = await supabase
     .from('users')
-    .insert([{ email, password: hashedPassword }]);
+    .insert([{ email, password: hashedPassword, role, ...additionalFields }]);
 
   if (error) {
     return res.status(500).json({ message: error.message });

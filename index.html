@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Authentication Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        input[type="text"], input[type="password"], input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Buyer Authentication</h2>
+    <div class="error" id="error-message"></div>
+    <form id="auth-form">
+        <input type="text" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="text" id="fullName" placeholder="Full Name" required>
+        <input type="text" id="industry" placeholder="Industry" required>
+        <input type="text" id="country" placeholder="Country" required>
+        <input type="tel" id="phone" placeholder="Phone" required>
+        <button type="button" id="register-btn">Register as Buyer</button>
+        <button type="button" id="login-btn">Login as Buyer</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('register-btn').addEventListener('click', async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const fullName = document.getElementById('fullName').value;
+        const industry = document.getElementById('industry').value;
+        const country = document.getElementById('country').value;
+        const phone = document.getElementById('phone').value;
+
+        const response = await fetch('/api/register/buyer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password, fullName, industry, country, phone })
+        });
+
+        const data = await response.json();
+        handleResponse(data);
+    });
+
+    document.getElementById('login-btn').addEventListener('click', async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('/api/login/buyer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        handleResponse(data);
+    });
+
+    function handleResponse(data) {
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.textContent = data.message || '';
+
+        if (data.success) {
+            alert('Success: ' + data.message);
+            // Optionally redirect or perform other actions
+        }
+    }
+</script>
+
+</body>
+</html>

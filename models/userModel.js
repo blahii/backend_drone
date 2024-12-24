@@ -2,11 +2,11 @@
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-async function createUser(email, password) {
-  // Функция для создания пользователя в Supabase
+async function createUser(email, password, role, additionalFields) {
+  // Function to create a user in Supabase
   const { data, error } = await supabase
     .from('users')
-    .insert([{ email, password }]);
+    .insert([{ email, password, role, ...additionalFields }]); // Include role and additional fields
 
   return { data, error };
 }
