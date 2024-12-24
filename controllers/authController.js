@@ -1,6 +1,14 @@
+require('dotenv').config();
+console.log('Supabase URL:', process.env.SUPABASE_URL);
+console.log('Supabase Anon Key:', process.env.SUPABASE_ANON_KEY);
+
 const bcrypt = require('bcryptjs');
 const { createClient } = require('@supabase/supabase-js');
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+  throw new Error('Supabase URL and key must be provided.');
+}
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 async function register(req, res) {
   const { email, password } = req.body;
